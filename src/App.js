@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
+import Items from "./pages/Items"
+import Cart from "./pages/Cart"
+import OrderPlaced from "./pages/OrderPlaced"
 
 function App() {
+  const [page, setPage] = useState(
+    localStorage.getItem("token") ? "items" : "login"
+  )
+
+  if (page === "signup") {
+    return <Signup onSignup={() => setPage("login")} />
+  }
+
+  if (page === "login") {
+    return (
+      <Login
+        onLogin={() => setPage("items")}
+        onSignup={() => setPage("signup")}
+      />
+    )
+  }
+
+  if (page === "cart") {
+    return (
+      <Cart
+        goBack={() => setPage("items")}
+        goToOrderPlaced={() => setPage("orderPlaced")}
+      />
+    )
+  }
+
+  if (page === "orderPlaced") {
+    return <OrderPlaced goToItems={() => setPage("items")} />
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Items
+      goToCart={() => setPage("cart")}
+      onLogout={() => setPage("login")}
+    />
+  )
 }
 
-export default App;
+export default App
